@@ -1,5 +1,6 @@
-# -*- coding:utf8 -*-
 # !/usr/bin/env python
+# -*- coding:utf8 -*-
+
 # Copyright 2017 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,23 +39,27 @@ def webhook():
     print("Request:")
     print(json.dumps(req, indent=4))
 
-    speech = "This is a response to: " + req["queryResult"]["queryText"]
+    speech = "This is a response to: " + req["result"]["resolvedQuery"]
     # res = processRequest(req)
-    res = {"fulfillmentText": speech,
-           "source": "dialogflow-demo-webhook"}
+    # res = {"fulfillmentText": speech,
+    #       "source": "dialogflow-demo-webhook"}
+    res = {"speech": speech}
 
     print("\n\nResponse:")
     res = json.dumps(res, indent=4)
     print(res)
+    print("\n\n")
 
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
 
 
-if __name__ == '__main__':
+def main():
     port = int(os.getenv('PORT', 5000))
-
     print("Starting app on port %d" % port)
-
     app.run(debug=False, port=port, host='0.0.0.0')
+
+
+if __name__ == '__main__':
+    main()
