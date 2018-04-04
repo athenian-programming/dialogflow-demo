@@ -36,21 +36,23 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
-    print("Request:")
+    print("The request is:")
     print(json.dumps(req, indent=4))
 
-    speech = "This is a response to: " + req["result"]["resolvedQuery"]
+    # Lookup info in database
+
+    speech = "This is my response to: " + req["result"]["resolvedQuery"]
     # res = processRequest(req)
     # res = {"fulfillmentText": speech,
     #       "source": "dialogflow-demo-webhook"}
-    res = {"speech": speech}
+    result = {"speech": speech}
 
-    print("\n\nResponse:")
-    res = json.dumps(res, indent=4)
-    print(res)
+    print("\n\nThis is the response:")
+    result = json.dumps(result, indent=4)
+    print(result)
     print("\n\n")
 
-    r = make_response(res)
+    r = make_response(result)
     r.headers['Content-Type'] = 'application/json'
     return r
 
