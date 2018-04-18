@@ -85,6 +85,5 @@ def main():
     logger.info("Starting webhook listening on port {}".format(port))
     http.run(debug=False, port=port, host='0.0.0.0')
 
-
 if __name__ == '__main__':
     main()
