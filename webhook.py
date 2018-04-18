@@ -33,7 +33,7 @@ app = Flask(__name__)
 
 @app.route('/', methods= ['GET'])
 def home():
-    return "hello everyone in the world"
+    return "hello world"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
