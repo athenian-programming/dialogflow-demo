@@ -21,32 +21,21 @@ from future.standard_library import install_aliases
 
 install_aliases()
 
-import argparse
-import logging
 import json
 import os
 
 from flask import Flask
 from flask import request
-from flask import Response
 from flask import make_response
-from utils import setup_logging
-
-PORT = 'port'
-LOG_LEVEL = 'loglevel'
-
-logger = logging.getLogger(__name__)
 
 # Flask app should start in global layout
-http = Flask(__name__)
+app = Flask(__name__)
 
-
-@http.route('/', methods=['GET'])
+@app.route('/', methods= ['GET'])
 def home():
-    return Response('Hello World!', mimetype='text/plain')
+    return "hello everyone in the world"
 
-
-@http.route('/webhook', methods=['POST'])
+@app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
 
@@ -61,8 +50,8 @@ def webhook():
     #       "source": "dialogflow-demo-webhook"}
     result = {"speech": speech}
 
-    result = json.dumps(result, indent=4)
     print("\n\nThis is the response:")
+    result = json.dumps(result, indent=4)
     print(result)
     print("\n\n")
 
@@ -70,20 +59,11 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
+
 def main():
-    # Parse CLI args
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', dest=PORT, default=8080, help='HTTP port [8080]')
-    parser.add_argument('-v', '--verbose', dest=LOG_LEVEL, default=logging.INFO, action='store_const',
-                        const=logging.DEBUG, help='Enable debugging info')
-    args = vars(parser.parse_args())
-
-    # Setup logging
-    setup_logging(level=args[LOG_LEVEL])
-
-    port = int(os.environ.get('PORT', args[PORT]))
-    logger.info("Starting webhook listening on port {}".format(port))
-    http.run(debug=False, port=port, host='0.0.0.0')
+    port = int(os.getenv('PORT', 5000))
+    print("Starting app on port %d" % port)
+    app.run(debug=False, port=port, host='0.0.0.0')
 
 if __name__ == '__main__':
     main()
