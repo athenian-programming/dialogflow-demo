@@ -30,6 +30,7 @@ from flask import Flask
 from flask import request
 from flask import make_response
 from utils import setup_logging
+from flask import Response
 
 PORT = 'port'
 LOG_LEVEL = 'loglevel'
@@ -42,7 +43,7 @@ http = Flask(__name__)
 
 @http.route('/', methods=['GET'])
 def home():
-    return "hello everyone in the world"
+    return Response('Hello World!', mimetype='text/plain')
 
 
 @http.route('/webhook', methods=['POST'])
