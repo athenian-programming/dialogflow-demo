@@ -46,6 +46,11 @@ def home():
     return Response('Hello World!', mimetype='text/plain')
 
 
+@http.route('/test', methods=['GET'])
+def test():
+    return Response('You reached the test endpoint', mimetype='text/plain')
+
+
 @http.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
