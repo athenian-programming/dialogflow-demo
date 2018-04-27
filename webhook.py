@@ -60,20 +60,17 @@ def webhook():
 
     # Lookup info in database
 
-    response = "This is my response to: " + req["queryResult"]["queryText"]
-    # res = processRequest(req)
-    # res = {"fulfillmentText": speech,
-    #       "source": "dialogflow-demo-webhook"}
+    answer = "This is my response to: " + req["queryResult"]["queryText"]
 
-    result = {"fulfillmentText": response,
+    resp = {"fulfillmentText": answer,
               "source": "This is the source value"}
 
-    print("\n\nThis is the response:")
-    result = json.dumps(result, indent=4)
-    print(result)
+    print("\n\nResponding with:")
+    resp = json.dumps(resp, indent=4)
+    print(resp)
     print("\n\n")
 
-    r = make_response(result)
+    r = make_response(resp)
     r.headers['Content-Type'] = 'application/json'
     return r
 
