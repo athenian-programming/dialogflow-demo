@@ -8,9 +8,11 @@ rm-containers:
 build:
 	docker build -t $(USER)/dialogflow-webhook:1.0 .
 
-run:
+docker-run:
 	docker run -p 8080:8080 $(USER)/dialogflow-webhook:1.0
 
-push:
+docker-push:
 	docker push $(USER)/dialogflow-webhook:1.0
 
+heroku-push:
+	git push heroku master

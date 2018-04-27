@@ -48,7 +48,7 @@ def home():
 
 @http.route('/test', methods=['GET'])
 def test():
-    return Response('You reached the test endpoint', mimetype='text/plain')
+    return Response('You have reached the test endpoint', mimetype='text/plain')
 
 
 @http.route('/webhook', methods=['POST'])

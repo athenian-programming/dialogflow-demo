@@ -40,3 +40,16 @@ Run the *dialogflow-webhook* container with:
 docker run -p 8080:8080 dialogflow-webhook
 ```
 
+## Heroku
+
+Add a remote repo with:
+```bash
+heroku git:remote -a {heroku-app-name}
+```
+
+Deploy to heroku with:
+```bash
+git push heroku master
+```
+
+Reach the deployed app at https://{heroku-app-name}.herokuapp.com
