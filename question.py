@@ -21,4 +21,4 @@ class Question(object):
         self.__answer = answer
 
     def __str__(self):
-        return "questions_id: {} [{}]".format(self.__question_id, self.__answer)
+        return "    question_id: {} answer: {}".format(self.__question_id, self.__answer)

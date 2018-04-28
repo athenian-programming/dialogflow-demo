@@ -26,7 +26,7 @@ class Session(object):
         return self.__questions[self.__question_index]
 
     def __str__(self):
-        s = "[{}] [{}]\n".format(self.__session_id, self.__source)
+        s = "session_id: [{}] source: [{}]\n".format(self.__session_id, self.__source)
         for q in self.__questions:
             s += "{}\n".format(q)
         return s
