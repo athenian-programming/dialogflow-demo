@@ -19,11 +19,13 @@ from __future__ import print_function
 
 from future.standard_library import install_aliases
 
+from session import Session
+
 install_aliases()
 
 import json
 import os
-
+from question import Question
 import argparse
 import logging
 from flask import Flask
@@ -42,7 +44,7 @@ http = Flask(__name__)
 
 
 @http.route('/', methods=['GET'])
-def home():
+def root():
     return Response('Hello World!', mimetype='text/plain')
 
 
@@ -51,19 +53,41 @@ def test():
     return Response('You have reached the test endpoint', mimetype='text/plain')
 
 
+@http.route('/sessions', methods=['GET'])
+def sessions():
+    global sessions
+    resp = str(len(sessions)) + ' current sessions:\n' + str([("Session: " + str(s)) for s in sessions.values()])
+    return Response(resp, mimetype='text/plain')
+
+
 @http.route('/webhook', methods=['POST'])
 def webhook():
+    global sessions
+
     req = request.get_json(silent=True, force=True)
 
     print("The request is:")
     print(json.dumps(req, indent=4))
 
     # Lookup info in database
+    session_id = req["session"]
 
-    answer = "This is my response to: " + req["queryResult"]["queryText"]
+    # Add to sessions map if not present
+    if (session_id not in sessions):
+        try:
+            source = req["originalDetectIntentRequest"]["payload"]["source"]
+        except KeyError:
+            source = "unknown"
 
-    resp = {"fulfillmentText": answer,
-              "source": "This is the source value"}
+        sessions[session_id] = Session(session_id, source)
+
+    intent = req["queryResult"]["intent"]["displayName"]
+    if (intent == "questions"):
+        answer = "What do you think about gun control"
+    else:
+        answer = "This is my response to: " + req["queryResult"]["queryText"]
+
+    resp = {"fulfillmentText": answer}
 
     print("\n\nResponding with:")
     resp = json.dumps(resp, indent=4)
@@ -91,5 +115,17 @@ def main():
     http.run(debug=False, port=port, host='0.0.0.0')
 
 
+def load_dummy_data():
+    global questions, sessions
+    questions = [Question("What do you thing about gun control 1"),
+                 Question("What do you thing about gun control 2"),
+                 Question("What do you thing about gun control 3"),
+                 Question("What do you thing about gun control 4"),
+                 Question("What do you thing about gun control 5")]
+
+    sessions = {}
+
+
 if __name__ == '__main__':
+    load_dummy_data()
     main()
