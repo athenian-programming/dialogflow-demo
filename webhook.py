@@ -32,6 +32,7 @@ from flask import request
 from flask import make_response
 from utils import setup_logging
 from flask import Response
+from flask import abort
 
 PORT = 'port'
 LOG_LEVEL = 'loglevel'
@@ -59,6 +60,16 @@ def sessions():
     for sv in sessions.values():
         resp += "\n" + str(sv)
     return Response(resp, mimetype='text/plain')
+
+
+# Require passwird with: http://localhost:8080/reset?password=secret
+@http.route('/reset', methods=['GET'])
+def reset():
+    global sessions
+    if not request.args or 'password' not in request.args or request.args["password"] != "secret":
+        abort(400)
+    sessions = {}
+    return Response("Sessions reset.", mimetype='text/plain')
 
 
 @http.route('/webhook', methods=['POST'])
