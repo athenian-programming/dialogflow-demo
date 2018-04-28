@@ -13,7 +13,7 @@ Install the required python packages with:
 pip install -r requirements.txt
 ```
 
-## Execution
+## Server Execution
 
 ### Standalone
 
