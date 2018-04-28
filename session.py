@@ -6,11 +6,11 @@ class Session(object):
     def __init__(self, session_id, source):
         self.__session_id = session_id
         self.__source = source
-        self.__questions = [Question(0, "What do you thing about gun control 1"),
-                            Question(1, "What do you thing about gun control 2"),
-                            Question(2, "What do you thing about gun control 3"),
-                            Question(3, "What do you thing about gun control 4"),
-                            Question(4, "What do you thing about gun control 5")]
+        self.__questions = [Question(0, "What do you think about gun control 1"),
+                            Question(1, "What do you think about gun control 2"),
+                            Question(2, "What do you think about gun control 3"),
+                            Question(3, "What do you think about gun control 4"),
+                            Question(4, "What do you think about gun control 5")]
         self.__question_index = -1
 
     def next_question(self, answer):
