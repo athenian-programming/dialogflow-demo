@@ -1,16 +1,24 @@
 class Question(object):
-    # static counter for ids -- usually done in DBMS
-    id_counter = 0
-
-    def __init__(self, text):
-        Question.id_counter = Question.id_counter + 1
-        self.__question_id = Question.id_counter
-        self.__text = text
+    def __init__(self, id, text):
+        self.__question_id = id
+        self.__question = text
+        self.__answer = None
 
     @property
     def id(self):
         return self.__question_id
 
     @property
-    def text(self):
-        return self.__text
+    def question(self):
+        return self.__question
+
+    @property
+    def answer(self):
+        return self.__answer
+
+    @answer.setter
+    def answer(self, answer):
+        self.__answer = answer
+
+    def __str__(self):
+        return "questions_id: {} [{}]".format(self.__question_id, self.__answer)

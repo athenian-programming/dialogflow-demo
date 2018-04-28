@@ -1,7 +1,9 @@
-# dialogflow-demo
+# DialogFlow Demo
 
-## DialogFlow Tutorial
-https://dialogflow.com/docs/getting-started/building-your-first-agent
+## Helpful DialogFlow Links
+* [Tutorial](https://dialogflow.com/docs/getting-started/building-your-first-agent)
+* [WebhookRequest](https://dialogflow.com/docs/reference/api-v2/rest/Shared.Types/WebhookRequest)
+* [WebhookResponse](https://dialogflow.com/docs/reference/api-v2/rest/Shared.Types/WebhookResponse)
 
 
 ## Setup

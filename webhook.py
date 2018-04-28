@@ -25,7 +25,6 @@ install_aliases()
 
 import json
 import os
-from question import Question
 import argparse
 import logging
 from flask import Flask
@@ -56,7 +55,9 @@ def test():
 @http.route('/sessions', methods=['GET'])
 def sessions():
     global sessions
-    resp = str(len(sessions)) + ' current sessions:\n' + str([("Session: " + str(s)) for s in sessions.values()])
+    resp = "{} current sessions:\n".format(len(sessions))
+    for sv in sessions.values():
+        resp += "\n" + str(sv)
     return Response(resp, mimetype='text/plain')
 
 
@@ -66,10 +67,9 @@ def webhook():
 
     req = request.get_json(silent=True, force=True)
 
-    print("The request is:")
+    print("Request:")
     print(json.dumps(req, indent=4))
 
-    # Lookup info in database
     session_id = req["session"]
 
     # Add to sessions map if not present
@@ -77,20 +77,23 @@ def webhook():
         try:
             source = req["originalDetectIntentRequest"]["payload"]["source"]
         except KeyError:
-            source = "unknown"
-
+            source = "unknown source"
         sessions[session_id] = Session(session_id, source)
+
+    session = sessions[session_id]
 
     intent = req["queryResult"]["intent"]["displayName"]
     if (intent == "questions"):
-        answer = "What do you think about gun control"
+        fulfillment_text = session.next_question(None)
+    elif (intent == "questions.answer"):
+        answer = req["queryResult"]["queryText"]
+        fulfillment_text = session.next_question(answer)
     else:
-        answer = "This is my response to: " + req["queryResult"]["queryText"]
+        fulfillment_text = "Unknown state"
 
-    resp = {"fulfillmentText": answer}
+    resp = json.dumps({"fulfillmentText": fulfillment_text}, indent=4)
 
-    print("\n\nResponding with:")
-    resp = json.dumps(resp, indent=4)
+    print("\n\nResponse:")
     print(resp)
     print("\n\n")
 
@@ -116,13 +119,7 @@ def main():
 
 
 def load_dummy_data():
-    global questions, sessions
-    questions = [Question("What do you thing about gun control 1"),
-                 Question("What do you thing about gun control 2"),
-                 Question("What do you thing about gun control 3"),
-                 Question("What do you thing about gun control 4"),
-                 Question("What do you thing about gun control 5")]
-
+    global sessions
     sessions = {}
 
 
