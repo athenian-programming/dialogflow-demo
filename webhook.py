@@ -44,17 +44,17 @@ http = Flask(__name__)
 
 
 @http.route('/', methods=['GET'])
-def root():
+def root_endpoint():
     return Response('Hello World!!!', mimetype='text/plain')
 
 
 @http.route('/test', methods=['GET'])
-def test():
+def test_endpoint():
     return Response('You have reached the test endpoint', mimetype='text/plain')
 
 
 @http.route('/sessions', methods=['GET'])
-def sessions():
+def sessions_endpoint():
     global sessions
     cnt = len(sessions)
     resp = "{} current sessions:\n".format(cnt)
