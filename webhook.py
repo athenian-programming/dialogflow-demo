@@ -27,6 +27,7 @@ import json
 import os
 import argparse
 import logging
+import redis
 from flask import Flask
 from flask import request
 from flask import make_response
@@ -43,7 +44,7 @@ logger = logging.getLogger(__name__)
 http = Flask(__name__)
 
 # Initialize map of all users
-sessions = {}
+redis = redis.Redis(host='localhost', port=6379, db=0)
 
 
 @http.route('/', methods=['GET'])
@@ -58,7 +59,7 @@ def test_endpoint():
 
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
-    global sessions
+    sessions = Session.all_sessions(redis)
     resp = "{} current sessions:\n".format(len(sessions))
     for sv in sessions.values():
         resp += "\n" + str(sv)
@@ -68,16 +69,15 @@ def sessions_endpoint():
 # Require password with: http://localhost:8080/reset?password=secret
 @http.route('/reset', methods=['GET'])
 def reset():
-    global sessions
     if not request.args or 'password' not in request.args or request.args["password"] != "secret":
         abort(400)
-    sessions = {}
+    Session.clear_all(redis)
     return Response("Sessions reset.", mimetype='text/plain')
 
 
 @http.route('/webhook', methods=['POST'])
 def webhook():
-    global sessions
+    global redis
 
     req = request.get_json(silent=True, force=True)
 
@@ -87,14 +87,14 @@ def webhook():
     session_id = req["session"]
 
     # Add to sessions map if not present
-    if (session_id not in sessions):
+    if (not Session.exists(redis, session_id)):
         try:
             source = req["originalDetectIntentRequest"]["payload"]["source"]
         except KeyError:
             source = "unknown source"
-        sessions[session_id] = Session(session_id, source)
+        Session.create(redis, session_id, source)
 
-    session = sessions[session_id]
+    session = Session.fetch(redis, session_id)
 
     intent = req["queryResult"]["intent"]["displayName"]
 
@@ -112,9 +112,9 @@ def webhook():
     print(resp)
     print("\n\n")
 
-    r = make_response(resp)
-    r.headers['Content-Type'] = 'application/json'
-    return r
+    retval = make_response(resp)
+    retval.headers['Content-Type'] = 'application/json'
+    return retval
 
 
 def main():

@@ -3,3 +3,4 @@ Flask-httpauth==3.2.3
 requests==2.18.4
 future==0.16.0
 gunicorn==19.7.1
+redis==2.10.6
