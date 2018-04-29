@@ -42,6 +42,9 @@ logger = logging.getLogger(__name__)
 # Flask app should start in global layout
 http = Flask(__name__)
 
+# Initialize map of all users
+sessions = {}
+
 
 @http.route('/', methods=['GET'])
 def root_endpoint():
@@ -56,8 +59,7 @@ def test_endpoint():
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
     global sessions
-    cnt = len(sessions)
-    resp = "{} current sessions:\n".format(cnt)
+    resp = "{} current sessions:\n".format(len(sessions))
     for sv in sessions.values():
         resp += "\n" + str(sv)
     return Response(resp, mimetype='text/plain')
@@ -116,8 +118,6 @@ def webhook():
 
 
 def main():
-    global sessions
-
     # Parse CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port', dest=PORT, default=8080, help='HTTP port [8080]')
@@ -127,8 +127,6 @@ def main():
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
-
-    sessions = {}
 
     port = int(os.environ.get('PORT', args[PORT]))
     logger.info("Starting webhook listening on port {}".format(port))
