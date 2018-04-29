@@ -56,7 +56,8 @@ def test():
 @http.route('/sessions', methods=['GET'])
 def sessions():
     global sessions
-    resp = "{} current sessions:\n".format(len(sessions))
+    cnt = len(sessions)
+    resp = "{} current sessions:\n".format(cnt)
     for sv in sessions.values():
         resp += "\n" + str(sv)
     return Response(resp, mimetype='text/plain')
@@ -115,6 +116,8 @@ def webhook():
 
 
 def main():
+    global sessions
+
     # Parse CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--port', dest=PORT, default=8080, help='HTTP port [8080]')
@@ -125,16 +128,12 @@ def main():
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
+    sessions = {}
+
     port = int(os.environ.get('PORT', args[PORT]))
     logger.info("Starting webhook listening on port {}".format(port))
     http.run(debug=False, port=port, host='0.0.0.0')
 
 
-def load_dummy_data():
-    global sessions
-    sessions = {}
-
-
 if __name__ == '__main__':
-    load_dummy_data()
     main()
