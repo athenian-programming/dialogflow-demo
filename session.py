@@ -14,11 +14,14 @@ class Session(object):
         self.__question_index = -1
 
     def next_question(self, answer):
+        if self.__question_index == 4:
+            return "Please stop asking me questions."
+
         # Record answer from previous question
         if (self.__question_index > -1):
             self.current_question.answer = answer
         self.__question_index = self.__question_index + 1
-        question = (self.current_question).question
+        question = self.current_question.question
         return question
 
     @property

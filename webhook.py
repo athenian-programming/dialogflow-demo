@@ -62,7 +62,7 @@ def sessions():
     return Response(resp, mimetype='text/plain')
 
 
-# Require passwird with: http://localhost:8080/reset?password=secret
+# Require password with: http://localhost:8080/reset?password=secret
 @http.route('/reset', methods=['GET'])
 def reset():
     global sessions
@@ -94,6 +94,7 @@ def webhook():
     session = sessions[session_id]
 
     intent = req["queryResult"]["intent"]["displayName"]
+
     if (intent == "questions"):
         fulfillment_text = session.next_question(None)
     elif (intent == "questions.answer"):
