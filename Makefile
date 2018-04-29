@@ -5,7 +5,7 @@ list-containers:
 rm-containers:
 	docker ps -q -a | xargs docker rm
 
-build:
+docker-build:
 	docker build -t $(USER)/dialogflow-webhook:1.0 .
 
 docker-run:
