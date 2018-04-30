@@ -38,17 +38,17 @@ ngrok http 5000
 Build the *dialogflow-webhook* container with:
 
 ```bash
-docker build -t dialogflow-webhook .
+docker build -t $(USER)/dialogflow-webhook:1.0 .
 ```
 
-Deploy a Redis server with:
+Run a Redis server with:
 ```bash
 docker run -p 6379:6379 -d redis
 ```
 
 Run the *dialogflow-webhook* container with:
 ```bash
-docker run -p 8080:8080 dialogflow-webhook
+docker run -p 8080:8080 $(USER)/dialogflow-webhook:1.0
 ```
 
 ## Heroku
