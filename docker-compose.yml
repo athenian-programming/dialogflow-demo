@@ -1,0 +1,14 @@
+version: '2'
+services:
+  app:
+    image: 'pambrose/dialogflow-webhook:1.0'
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

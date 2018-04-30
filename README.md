@@ -34,15 +34,19 @@ Run [ngrok](https://ngrok.com) with:
 ngrok http 5000
 ```
 
-### docker
+### Docker
 Build the *dialogflow-webhook* container with:
 
 ```bash
 docker build -t dialogflow-webhook .
 ```
 
-Run the *dialogflow-webhook* container with:
+Deploy a Redis server with:
+```bash
+docker run -p 6379:6379 -d redis
+```
 
+Run the *dialogflow-webhook* container with:
 ```bash
 docker run -p 8080:8080 dialogflow-webhook
 ```
@@ -54,9 +58,21 @@ Add a remote repo with:
 heroku git:remote -a {heroku-app-name}
 ```
 
-Deploy to heroku with:
+Provision a Redis server on Heroku with:
+```bash
+heroku addons:create heroku-redis:hobby-dev
+```
+
+Deploy the DialogFlow server to heroku with:
 ```bash
 git push heroku master
 ```
 
-Reach the deployed app at https://{heroku-app-name}.herokuapp.com
+The deployed app's URL will be: https://{heroku-app-name}.herokuapp.com
+
+## Docker Compose
+
+Use [Docker Compose](https://docs.docker.com/compose/) to deploy the *dialogflow-webhook* container and Redis server together with:
+```bash
+docker-compose -f docker-compose.yml up
+```
