@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 Run 'webhook.py' with:
 ```bash
-python webhook.py
+python3 webhook.py
 ```
 
 Run [redis](https://redis.io) with:
