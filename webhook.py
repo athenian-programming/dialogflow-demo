@@ -27,7 +27,7 @@ import json
 import os
 import argparse
 import logging
-import redis
+import redis as Redis
 from flask import Flask
 from flask import request
 from flask import make_response
@@ -43,8 +43,10 @@ logger = logging.getLogger(__name__)
 # Flask app should start in global layout
 http = Flask(__name__)
 
-# Initialize map of all users
-redis = redis.Redis(host='localhost', port=6379, db=0)
+if os.environ.get("REDIS_URL") == None:
+    redis = Redis.Redis(host='localhost', port=6379, db=0)
+else:
+    redis = Redis.from_url(os.environ.get("REDIS_URL"))
 
 
 @http.route('/', methods=['GET'])
@@ -60,19 +62,19 @@ def test_endpoint():
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
     sessions = Session.all_sessions(redis)
-    resp = "{} current sessions:\n".format(len(sessions))
+    resp = '{} current sessions:\n'.format(len(sessions))
     for sv in sessions.values():
-        resp += "\n" + str(sv)
+        resp += '\n' + str(sv)
     return Response(resp, mimetype='text/plain')
 
 
 # Require password with: http://localhost:8080/reset?password=secret
 @http.route('/reset', methods=['GET'])
 def reset():
-    if not request.args or 'password' not in request.args or request.args["password"] != "secret":
+    if not request.args or 'password' not in request.args or request.args['password'] != 'secret':
         abort(400)
     Session.clear_all(redis)
-    return Response("Sessions reset.", mimetype='text/plain')
+    return Response('Sessions reset.', mimetype='text/plain')
 
 
 @http.route('/webhook', methods=['POST'])
@@ -81,36 +83,36 @@ def webhook():
 
     req = request.get_json(silent=True, force=True)
 
-    print("Request:")
+    print('Request:')
     print(json.dumps(req, indent=4))
 
-    session_id = req["session"]
+    session_id = req['session']
 
     # Add to sessions map if not present
     if (not Session.exists(redis, session_id)):
         try:
-            source = req["originalDetectIntentRequest"]["payload"]["source"]
+            source = req['originalDetectIntentRequest']['payload']['source']
         except KeyError:
-            source = "unknown source"
+            source = 'unknown source'
         Session.create(redis, session_id, source)
 
     session = Session.fetch(redis, session_id)
 
-    intent = req["queryResult"]["intent"]["displayName"]
+    intent = req['queryResult']['intent']['displayName']
 
-    if (intent == "questions"):
+    if (intent == 'questions'):
         fulfillment_text = session.next_question(None)
-    elif (intent == "questions.answer"):
-        answer = req["queryResult"]["queryText"]
+    elif (intent == 'questions.answer'):
+        answer = req['queryResult']['queryText']
         fulfillment_text = session.next_question(answer)
     else:
-        fulfillment_text = "Unknown state"
+        fulfillment_text = 'Unknown state'
 
-    resp = json.dumps({"fulfillmentText": fulfillment_text}, indent=4)
+    resp = json.dumps({'fulfillmentText': fulfillment_text}, indent=4)
 
-    print("\n\nResponse:")
+    print('\n\nResponse:')
     print(resp)
-    print("\n\n")
+    print('\n\n')
 
     retval = make_response(resp)
     retval.headers['Content-Type'] = 'application/json'
@@ -129,7 +131,7 @@ def main():
     setup_logging(level=args[LOG_LEVEL])
 
     port = int(os.environ.get('PORT', args[PORT]))
-    logger.info("Starting webhook listening on port {}".format(port))
+    logger.info('Starting webhook listening on port {}'.format(port))
     http.run(debug=False, port=port, host='0.0.0.0')
 
 

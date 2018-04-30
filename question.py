@@ -1,8 +1,15 @@
 class Question(object):
+    COUNTER = 0
+
     def __init__(self, id, text):
         self.__question_id = id
         self.__question = text
-        self.__answer = None
+
+    @staticmethod
+    def create(text):
+        q = Question(Question.COUNTER, text)
+        Question.COUNTER += 1
+        return q
 
     @property
     def id(self):
@@ -12,13 +19,5 @@ class Question(object):
     def question(self):
         return self.__question
 
-    @property
-    def answer(self):
-        return self.__answer
-
-    @answer.setter
-    def answer(self, answer):
-        self.__answer = answer
-
     def __str__(self):
-        return "    question_id: {} answer: {}".format(self.__question_id, self.__answer)
+        return '    question_id: {}'.format(self.__question_id)

@@ -15,11 +15,16 @@ pip install -r requirements.txt
 
 ## Server Execution
 
-### Standalone
+### Local dev
 
 Run 'webhook.py' with:
 ```bash
 python webhook.py
+```
+
+Run [redis](https://redis.io) with:
+```bash
+docker run -p 6379:6379 -d redis
 ```
 
 ### ngrok
