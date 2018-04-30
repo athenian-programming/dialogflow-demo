@@ -29,7 +29,9 @@ logger = logging.getLogger(__name__)
 # Flask app should start in global layout
 http = Flask(__name__)
 
+# REDIS_URL is defined when running on Heroku
 if os.environ.get("REDIS_URL") == None:
+    # REDIS_HOST is defined when running in docker compose
     redis = Redis.Redis(host=os.environ.get("REDIS_HOST", "localhost"), port=6379, db=0)
 else:
     redis = Redis.from_url(os.environ.get("REDIS_URL"))
