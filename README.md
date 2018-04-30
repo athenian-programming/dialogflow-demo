@@ -1,9 +1,10 @@
 # DialogFlow Demo
 
-## Helpful DialogFlow Links
+## Helpful Links
 * [Tutorial](https://dialogflow.com/docs/getting-started/building-your-first-agent)
 * [WebhookRequest](https://dialogflow.com/docs/reference/api-v2/rest/Shared.Types/WebhookRequest)
 * [WebhookResponse](https://dialogflow.com/docs/reference/api-v2/rest/Shared.Types/WebhookResponse)
+* [Docker Tutorial](https://hackernoon.com/docker-tutorial-getting-started-with-python-redis-and-nginx-81a9d740d091)
 
 
 ## Setup
