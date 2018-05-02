@@ -56,6 +56,20 @@ def sessions_endpoint():
     return Response(resp, mimetype='text/plain')
 
 
+@http.route('/results', methods=['GET'])
+def results_endpoint():
+    resp = '''
+    <html>
+        <head>
+        </head>
+        <body>
+            <h1>These are the results:</h1>
+        </body>
+    </html>
+    '''
+    return Response(resp, mimetype='text/html')
+
+
 # Require password with: http://localhost:8080/reset?password=secret
 @http.route('/reset', methods=['GET'])
 def reset():
