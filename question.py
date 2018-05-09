@@ -20,4 +20,4 @@ class Question(object):
         return self.__question
 
     def __str__(self):
-        return '    question_id: {} {}'.format(self.__question_id, self.__question)
+        return '    Question: {} {}'.format(self.__question_id, self.__question)
