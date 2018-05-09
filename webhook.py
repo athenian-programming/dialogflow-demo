@@ -64,6 +64,29 @@ def sessions_endpoint():
     # Grab sessions from redis
     sessions = Session.all_sessions(redis)
 
+    # Display all the sessions
+    resp = '{} current sessions:\n'.format(len(sessions))
+    for sv in sessions.values():
+        resp += '\n' + str(sv)
+    return Response(resp, mimetype='text/plain')
+
+
+@http.route('/results', methods=['GET'])
+def results_endpoint():
+    q_cnt = len(QUESTIONS)
+
+    # Initialize results map
+    yes_results = {}
+    no_results = {}
+    unknown_results = {}
+    for i in range(q_cnt):
+        yes_results[i] = 0
+        no_results[i] = 0
+        unknown_results[i] = 0
+
+    # Grab sessions from redis
+    sessions = Session.all_sessions(redis)
+
     # Walk through sessions and count results
     for sv in sessions.values():
         for i in range(q_cnt):
@@ -86,10 +109,6 @@ def sessions_endpoint():
         resp += "       NO: " + str(no_results[i]) + "\n"
         resp += "       UNKNOWN: " + str(unknown_results[i]) + "\n\n"
 
-    # Display all the sessions
-    resp += '{} current sessions:\n'.format(len(sessions))
-    for sv in sessions.values():
-        resp += '\n' + str(sv)
     return Response(resp, mimetype='text/plain')
 
 
