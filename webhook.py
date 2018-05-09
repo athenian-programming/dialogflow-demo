@@ -81,10 +81,10 @@ def sessions_endpoint():
     # Display all the results
     resp = "Results: \n"
     for i in range(q_cnt):
-        resp += str(QUESTIONS[i])
-        resp += "YES" + str(yes_results[i])
-        resp += "NO" + str(no_results[i])
-        resp += "UNKNOWN" + str(unknown_results[i])
+        resp += str(QUESTIONS[i]) + "\n"
+        resp += "YES" + str(yes_results[i]) + "\n"
+        resp += "NO" + str(no_results[i]) + "\n"
+        resp += "UNKNOWN" + str(unknown_results[i]) + "\n"
 
     # Display all the sessions
     resp += '{} current sessions:\n'.format(len(sessions))
