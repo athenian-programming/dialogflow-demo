@@ -20,6 +20,7 @@ from flask import make_response
 from utils import setup_logging
 from flask import Response
 from flask import abort
+from session import QUESTIONS
 
 PORT = 'port'
 LOG_LEVEL = 'loglevel'
@@ -50,7 +51,42 @@ def test_endpoint():
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
     sessions = Session.all_sessions(redis)
-    resp = '{} current sessions:\n'.format(len(sessions))
+    q_cnt = len(QUESTIONS)
+    resp = ""
+
+    # Initialize results map
+    yes_results = {}
+    no_results = {}
+    unknown_results = {}
+    for i in range(q_cnt):
+        yes_results[i] = 0
+        no_results[i] = 0
+        unknown_results[i] = 0
+
+    # Walk through sessions and count results
+    for sv in sessions.values():
+        for i in range(q_cnt):
+            answer = sv.get_answer(i)
+            if answer is None:
+                continue
+            elif answer.lower() == 'yes':
+                yes_results[i] += 1
+            elif answer.lower() == 'no':
+                no_results[i] += 1
+            else:
+                unknown_results[i] += 1
+                logger.info("Bad answer: " + answer)
+
+    # Display all the results
+    resp += "Results: \n"
+    for i in range(q_cnt):
+        resp += QUESTIONS[i]
+        resp += "YES" + str(yes_results[i])
+        resp += "NO" + str(no_results[i])
+        resp += "UNKNOWN" + str(unknown_results[i])
+
+    # Display all the sessions
+    resp += '{} current sessions:\n'.format(len(sessions))
     for sv in sessions.values():
         resp += '\n' + str(sv)
     return Response(resp, mimetype='text/plain')
