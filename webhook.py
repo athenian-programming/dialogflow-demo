@@ -50,9 +50,7 @@ def test_endpoint():
 
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
-    sessions = Session.all_sessions(redis)
     q_cnt = len(QUESTIONS)
-    resp = ""
 
     # Initialize results map
     yes_results = {}
@@ -62,6 +60,9 @@ def sessions_endpoint():
         yes_results[i] = 0
         no_results[i] = 0
         unknown_results[i] = 0
+
+    # Grab sessions from redis
+    sessions = Session.all_sessions(redis)
 
     # Walk through sessions and count results
     for sv in sessions.values():
@@ -78,7 +79,7 @@ def sessions_endpoint():
                 logger.info("Bad answer: " + answer)
 
     # Display all the results
-    resp += "Results: \n"
+    resp = "Results: \n"
     for i in range(q_cnt):
         resp += QUESTIONS[i]
         resp += "YES" + str(yes_results[i])
