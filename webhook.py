@@ -50,16 +50,6 @@ def test_endpoint():
 
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
-    q_cnt = len(QUESTIONS)
-
-    # Initialize results map
-    yes_results = {}
-    no_results = {}
-    unknown_results = {}
-    for i in range(q_cnt):
-        yes_results[i] = 0
-        no_results[i] = 0
-        unknown_results[i] = 0
 
     # Grab sessions from redis
     sessions = Session.all_sessions(redis)
@@ -112,8 +102,8 @@ def results_endpoint():
     return Response(resp, mimetype='text/plain')
 
 
-@http.route('/results', methods=['GET'])
-def results_endpoint():
+@http.route('/results-html', methods=['GET'])
+def results_endpoint_endpoint():
     resp = '''
     <html>
         <head>
