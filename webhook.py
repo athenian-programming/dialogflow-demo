@@ -103,13 +103,18 @@ def results_endpoint():
 
 
 @http.route('/results-html', methods=['GET'])
-def results_endpoint_endpoint():
+def results_html_endpoint():
     resp = '''
     <html>
         <head>
         </head>
         <body>
             <h1>These are the results:</h1>
+    '''
+
+    # Put the html table here
+
+    resp += '''
         </body>
     </html>
     '''
