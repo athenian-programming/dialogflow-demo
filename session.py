@@ -45,8 +45,7 @@ class Session(object):
     @staticmethod
     def create(redis, session_id, source):
         # Add KV for session info
-        redis.set(SESSION_PREFIX + session_id,
-                  {SOURCE_KEY: source, ANSWERS_KEY: {}})
+        redis.set(SESSION_PREFIX + session_id, {SOURCE_KEY: source, ANSWERS_KEY: {}})
 
         # Add KV for questions_index value for each session
         redis.set(INDEX_PREFIX + session_id, -1)
@@ -79,7 +78,7 @@ class Session(object):
         if (self.__question_index > -1):
             self.__answers[self.__question_index] = answer
 
-            # Save session to redis
+            # Rewrite session to redis
             self.__redis.set(SESSION_PREFIX + self.__session_id,
                              {SOURCE_KEY: self.__source, ANSWERS_KEY: self.__answers})
 
