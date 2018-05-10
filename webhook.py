@@ -113,7 +113,9 @@ def results_html_endpoint():
     '''
 
     # Put the html table here
+    resp += "<td>"
 
+    resp += "</td>"
     resp += '''
         </body>
     </html>
