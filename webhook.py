@@ -48,6 +48,20 @@ def test_endpoint():
     return Response('You have reached the test endpoint', mimetype='text/plain')
 
 
+@http.route('/html-test', methods=['GET'])
+def htmltest_endpoint():
+    resp = '''
+    <html>
+        <head>
+        </head>
+        <body>
+            <h1>You have reached the html test endpoint</h1>
+        </body>
+    </html>
+    '''
+    return Response(resp, mimetype='text/html')
+
+
 @http.route('/sessions', methods=['GET'])
 def sessions_endpoint():
 
