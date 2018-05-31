@@ -57,6 +57,7 @@ def htmltest_endpoint():
         <body>
             <h1>You have reached the html test endpoint</h1>
             <h3>You have reached the html test endpoint</h3>
+            <h1>You have reached the html test endpoint</h1>
         </body>
     </html>
     '''
